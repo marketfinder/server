@@ -1,14 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import helmet from 'helmet';
 import * as csurf from 'csurf';
+import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // 사이트 간 요청 위조 방지
-  app.use(csurf())
+  app.use(helmet())
+
+  // app.use(cookieParser())
+  // app.use(csurf())
 
   await app.listen(3000);
 }
-
 bootstrap();
