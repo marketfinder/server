@@ -11,6 +11,8 @@ import { SidoModule } from './api/sido/sido.module';
 import { GunguModule } from './api/gungu/gungu.module';
 import { Sido } from './api/sido/entities/sido.entity';
 import { Gungu } from './api/gungu/entities/gungu.entity';
+import { Branch } from './api/branch/entities/branch.entity';
+import { MartModule } from './api/mart/mart.module';
 
 @Module({
   imports: [
@@ -30,13 +32,14 @@ import { Gungu } from './api/gungu/entities/gungu.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PW,
       database: process.env.DB_NAME,
-      entities: [Sido, Gungu],
+      entities: [Sido, Gungu, Branch],
       synchronize: false
     }),
     CronjobModule,
     BranchModule,
     SidoModule,
-    GunguModule
+    GunguModule,
+    MartModule
   ],
   controllers: [AppController],
   providers: [AppService],

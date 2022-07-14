@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Point } from 'geojson'
 
 @Entity('mart_branch')
 export class Branch {
@@ -52,13 +53,11 @@ export class Branch {
     })
     branch_postcode: string;
 
-    // 위도
-    @Column()
-    branch_latitude: number;
-
-    // 경도
-    @Column()
-    branch_longitude: number;
+    // 위, 경도
+    @Column({
+        type: 'point'
+    })
+    branch_location: Point;
 
     // 마트 1번째 휴무일
     @Column({
@@ -104,11 +103,11 @@ export class Branch {
     })
     branch_updated_at: number;
 
-    @Column()
-    mart_id: number;
+    // @Column()
+    // mart_id: number;
 
-    @Column()
-    gungu_id: number;
+    // @Column()
+    // gungu_id: number;
 
     // @ManyToOne(() => Mart)
     // @JoinColumn({ name: 'mart_id' })

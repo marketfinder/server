@@ -1,34 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { BranchService } from './branch.service';
-import { CreateBranchDto } from './dto/create-branch.dto';
-import { UpdateBranchDto } from './dto/update-branch.dto';
 
 @Controller('branch')
 export class BranchController {
-  constructor(private readonly branchService: BranchService) {}
+  constructor(private readonly branchService: BranchService) { }
 
-  @Post()
-  create(@Body() createBranchDto: CreateBranchDto) {
-    return this.branchService.create(createBranchDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.branchService.findAll();
-  }
-
+  // 선택한 대형마트의 정보
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.branchService.findOne(+id);
+  findOne(@Param('id') id: string, @Query('lat') lat: number, @Query('lng') lng: number, @Query('hl') hl: string) {
+    const language: string = hl == "en" ? "en" : "ko"
+
+    return this.branchService.findOne(+id, lat, lng, language);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBranchDto: UpdateBranchDto) {
-    return this.branchService.update(+id, updateBranchDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.branchService.remove(+id);
+  // 설정해놓은 반경 내 대형마트들의 목록
+  @Get("")
+  findNearBranches(@Query('lat') lat: number, @Query('lng') lng: number) {
+    return this.branchService.findNearBranches(lat, lng)
   }
 }
