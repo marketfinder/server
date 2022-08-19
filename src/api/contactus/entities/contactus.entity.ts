@@ -7,7 +7,6 @@ export class Contactus {
     @PrimaryGeneratedColumn('increment')
     contactus_id: number;
 
-    // 0: 최상단, 1: 공지, 2: 이벤트
     @Column({
         default: 0
     })
@@ -17,11 +16,11 @@ export class Contactus {
     @Column({
         length: 50
     })
-    notice_title: string;
+    contactus_title: string;
 
     // 문의 내용
     @Column()
-    notice_content: string;
+    contactus_content: string;
 
     // 문의고객 이메일
     @Column()
@@ -32,7 +31,6 @@ export class Contactus {
     contactus_answer: string;
 
     // 처리여부
-    // 0: 접수, 1: 답변완료
     @Column()
     contactus_status: number
 

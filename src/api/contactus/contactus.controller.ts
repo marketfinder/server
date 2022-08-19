@@ -1,11 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { EmailService, EmailTemplate, SendEmailDto } from 'src/common/email/email.service';
 import { ContactusService } from './contactus.service';
 import { CreateContactusDto } from './dto/create-contactus.dto';
+import { UpdateAnswerContactusDto } from './dto/update-answer-contactus';
 import { UpdateContactusDto } from './dto/update-contactus.dto';
+import { Contactus } from './entities/contactus.entity';
 
 @Controller('contactus')
 export class ContactusController {
-  constructor(private readonly contactusService: ContactusService) {}
+  constructor(
+    private readonly contactusService: ContactusService,
+    private readonly mailService: EmailService
+  ) { }
 
   @Post()
   create(@Body() createContactusDto: CreateContactusDto) {
@@ -13,8 +19,8 @@ export class ContactusController {
   }
 
   @Get()
-  findAll() {
-    return this.contactusService.findAll();
+  findAll(@Query('page') page: number) {
+    return this.contactusService.findAll(page);
   }
 
   @Get(':id')
@@ -23,8 +29,20 @@ export class ContactusController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContactusDto: UpdateContactusDto) {
-    return this.contactusService.update(+id, updateContactusDto);
+  async update(@Param('id') id: string, @Body() updateAnswerDto: UpdateAnswerContactusDto) {
+    const contactus: Contactus = await this.contactusService.update(+id, updateAnswerDto)
+
+    const sendEmailDto: SendEmailDto = new SendEmailDto()
+    sendEmailDto.to = contactus.contactus_email
+    sendEmailDto.subject = contactus.contactus_title
+    sendEmailDto.template = EmailTemplate.CONTACT
+    sendEmailDto.context = {
+      answer: contactus.contactus_answer
+    }
+
+    await this.mailService.sendEmail(sendEmailDto)
+
+    return ""
   }
 
   @Delete(':id')

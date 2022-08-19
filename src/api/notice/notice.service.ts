@@ -43,8 +43,13 @@ export class NoticeService {
     const notice: Notice = await this.noticeRepo.findOneBy({
       notice_id: id
     })
+    delete notice.notice_title
+    delete notice.notice_content
+    delete notice.notice_type
 
-    await this.noticeRepo.save(notice);
+    const updated: Notice = Object.assign(notice)
+
+    await this.noticeRepo.save(updated)
   }
 
   // 공지 삭제

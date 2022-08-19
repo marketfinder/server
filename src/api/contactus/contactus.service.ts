@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateContactusDto } from './dto/create-contactus.dto';
-import { UpdateContactusDto } from './dto/update-contactus.dto';
+import { UpdateAnswerContactusDto } from './dto/update-answer-contactus';
 import { Contactus } from './entities/contactus.entity';
 
 @Injectable()
@@ -14,8 +14,7 @@ export class ContactusService {
     private readonly contactusRepo: Repository<Contactus>
   ) { this.contactusRepo = contactusRepo }
 
-  async create(createContactusDto: CreateContactusDto) {
-  }
+  async create(createContactusDto: CreateContactusDto) { }
 
   // 문의내용 목록
   async findAll(page: number): Promise<Contactus[]> {
@@ -36,16 +35,20 @@ export class ContactusService {
   }
 
   // 문의내용 변경
-  async update(id: number, updateContactusDto: UpdateContactusDto) {
+  async update(id: number, answerDto: UpdateAnswerContactusDto): Promise<Contactus> {
     const contactus: Contactus = await this.contactusRepo.findOneBy({
       contactus_id: id
     })
+    contactus.contactus_answer = answerDto.answer
+    contactus.contactus_status = 1
 
     await this.contactusRepo.save(contactus);
+
+    return contactus
   }
 
   // 문의 삭제
-  async remove(id: number, isUse: boolean) {
+  async remove(id: number): Promise<void> {
     const contactus: Contactus = await this.contactusRepo.findOneBy({
       contactus_id: id
     })

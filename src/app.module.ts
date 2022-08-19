@@ -13,8 +13,7 @@ import { Sido } from './api/sido/entities/sido.entity';
 import { Gungu } from './api/gungu/entities/gungu.entity';
 import { Branch } from './api/branch/entities/branch.entity';
 import { MartModule } from './api/mart/mart.module';
-import { NoticeModule } from './src/api/notice/notice.module';
-import { ContactusModule } from './src/api/contactus/contactus.module';
+import { EmailService } from './common/email/email.service';
 import { NoticeModule } from './api/notice/notice.module';
 import { ContactusModule } from './api/contactus/contactus.module';
 
@@ -48,6 +47,6 @@ import { ContactusModule } from './api/contactus/contactus.module';
     ContactusModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailService],
 })
 export class AppModule { }
